@@ -1,0 +1,28 @@
+
+Self Driving Car Prototype:
+
+	Goals are:
+		
+		Make a working self driving car that can:
+			avoid obstacles
+			be easily customizable
+			rotates and moves toward mouse click
+		
+		Car has:
+			One front Raycasts that detects far away objects
+			2 whisker Raycasts that detect close objects (more for turning)
+			
+
+
+
+			
+			
+						
+2018-06-01:
+	So far we have created 2 classes:
+		Car:
+		
+		Main:
+
+	
+	

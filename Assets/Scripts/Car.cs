@@ -13,19 +13,23 @@ public class Car : MonoBehaviour {
         r.velocity = new Vector3(0, 0, 0);
 	}
 	
-	// Update is called once per frame
 	void Update () {
-
         if (currentAngle != lastAngle)
         {
             float difference = Mathf.Abs(currentAngle - lastAngle);
             if (2 * Mathf.PI - difference < difference)
             {
+                //print("going Counterclockwise");
                 difference = 2 * Mathf.PI - difference;
+                //print("difference is " + Mathf.Rad2Deg * difference);
                 float direction = currentAngle - lastAngle < 0 ? -1 : 1;
                 difference *= direction;
             }
-            currentAngle += difference / 100;
+            else
+            {
+                //print("Clockwise");
+            }
+            currentAngle += difference / 50;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Rad2Deg * currentAngle));
         }
 
@@ -61,11 +65,27 @@ public class Car : MonoBehaviour {
                     angle =  2 * Mathf.PI - angle; 
                 }
                 lastAngle = angle;
+                //lastAngle += 2 * Mathf.PI;
+
+
             }
 
-            //print("last Angle " + Mathf.Rad2Deg * lastAngle + "current angle " + Mathf.Rad2Deg * currentAngle);
+            print("last Angle " + Mathf.Rad2Deg * lastAngle + "current angle " + Mathf.Rad2Deg * currentAngle);
 
         }
-        
+
+        drawAngleArrow(currentAngle);
+        drawAngleArrow(lastAngle);
+
     }
+   
+
+    public void drawAngleArrow(float angle)
+    {
+        Vector2 start = Main.instance.getCenter();
+        Vector2 unit = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        Debug.DrawLine(start, start + unit);
+    }
+
+
 }
