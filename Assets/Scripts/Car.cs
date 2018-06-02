@@ -16,52 +16,8 @@ public class Car : MonoBehaviour {
 	void Update () {
         if (currentAngle != lastAngle)
         {
-
-            /*
- * 
- * if (currentAngle < lastAngle){
- * 
- * difference1 =  Mathf.Abs(currentAngle - lastAngle);
- * measures counterclockwise
- * 
- * difference2 =  2 * Mathf.PI - difference1;
- * measures clockwise
- * 
- * 
- * if ( difference1 < difference2){
- *     go ccw
- *     currentAngle += difference1 / 100;
- * } else if (difference1 > difference2){
-       go cw
-       currentAngle -= difference2 / 100;
- * }
-
- * } else if (currentAngle > lastAngle) {
- * 
- * difference1 =  Mathf.Abs(currentAngle - lastAngle);
- * measures clockwise
- * 
- * difference2 =  2 * Mathf.PI - difference1;
- * measures counterclockwise
- * 
-   if ( difference1 < difference2){
- *     go cw
- *     currentAngle -= difference1 / 100;
- * } else if (difference1 > difference2){
-       go ccw
-       currentAngle += difference2 / 100;
- * }
- * 
- * }
- * 
- * 
- * 
-
- * */
-
-
             float difference1 = 0, difference2 = 0;
-
+            //Angle measurement of difference1 is based off the angle of currentAngle and lastAngle
             if (currentAngle < lastAngle)
             {
 
@@ -107,20 +63,24 @@ public class Car : MonoBehaviour {
 
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Rad2Deg * currentAngle));
 
+            //Use for debug, (REMOVE)
             if (Input.GetMouseButtonDown(1))
             {
                 print("difference1 is " + Mathf.Rad2Deg * difference1 + " difference2 " + Mathf.Rad2Deg * difference2);
                 print("currentangle is " + Mathf.Rad2Deg * currentAngle + " lastangle is " + Mathf.Rad2Deg * lastAngle);
             }
 
-
         }
 
         Vector3 movement = new Vector3(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle), 0);
         r.velocity = movement * 1f;
 
+        /**
+         * If the left mouse is clicked, set the last angle positioning
+         * */
         if (Input.GetMouseButtonDown(0))
         {
+            //Acquire mouse positioning
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
             lastTarget = mousePosition;
 
@@ -152,15 +112,15 @@ public class Car : MonoBehaviour {
             //print("last Angle " + Mathf.Rad2Deg * lastAngle + "current angle " + Mathf.Rad2Deg * currentAngle);
 
         }
-
-        drawAngleArrow(currentAngle, Color.red);
-        drawAngleArrow(lastAngle, Color.green);
+        //Set angle visualization.
+        drawAngleArrow(currentAngle, Color.red); //CA
+        drawAngleArrow(lastAngle, Color.green); //LA
 
 
 
     }
 
-
+    //Draw the angles on screen.
     public void drawAngleArrow(float angle, Color color)
     {
         Vector2 start = Main.instance.getCenter();
