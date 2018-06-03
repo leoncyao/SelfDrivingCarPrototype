@@ -46,8 +46,10 @@ sysinfo.txt
 *.unitypackage
 
 assetDatabase3.File
-CurrentLayout.dwlt
+CurrentLayout.dwlt.File
 shadercompiler-UnityShaderCompiler.exe0.log
 shadercompiler-UnityShaderCompiler.exe0.log.txt
+
+DevLog.txt
 
 # End of https://www.gitignore.io/api/unity

@@ -18,11 +18,9 @@ Self Driving Car Prototype:
 			
 			
 						
-2018-06-01:
-	So far we have created 2 classes:
-		Car:
-		
-		Main:
+So far we have created 2 classes:
+	Car
+	Main
 
 	
 	
