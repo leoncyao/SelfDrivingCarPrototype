@@ -20,11 +20,14 @@ public class Car : MonoBehaviour {
         // First do checks (inputs of the model)
 
         float AngularForce = 0;
+
         // If the left mouse is clicked, set the last angle positioning
-        AngularForce += checkNewTarget();
+        //AngularForce += checkNewTarget();
+        checkNewTarget();
 
         // check current angle is not the same as last target angle 
         float restoringForce = restoringForceAvg();
+
         //// scan for front obstacles
         //float angularVelocityChange = checkFrontObstacle();
 
@@ -50,8 +53,8 @@ public class Car : MonoBehaviour {
 
 
         ////Set angle visualization.
-        //drawAngleArrow(currentAngle, Color.red); //CA
-        //drawAngleArrow(lastAngle, Color.green); //LA
+        drawAngleArrow(currentAngle, Color.red); //CA
+        drawAngleArrow(lastAngle, Color.green); //LA
         drawJourneyLine();
 
     }
@@ -87,17 +90,15 @@ public class Car : MonoBehaviour {
         float toChange = 0;
         if (currentAngle != lastAngle)
         {
-            float difference1 = 0, difference2 = 0;
             //Angle measurement of difference1 is based off the angle of currentAngle and lastAngle
+
+            float difference1 = Mathf.Abs(currentAngle - lastAngle);
+            float difference2 = 2 * Mathf.PI - difference1;
+
             if (currentAngle < lastAngle)
             {
-
-                difference1 = Mathf.Abs(currentAngle - lastAngle);
-                //measures counterclockwise
-
-                difference2 = 2 * Mathf.PI - difference1;
-                //measures clockwise
-
+                // difference1 measures counterclockwise
+                // difference2 measures clockwise
                 if (difference1 < difference2)
                 {
                     //go ccw
@@ -112,13 +113,8 @@ public class Car : MonoBehaviour {
             }
             else if (currentAngle > lastAngle)
             {
-
-                difference1 = Mathf.Abs(currentAngle - lastAngle);
-                //measures clockwise
-
-                difference2 = 2 * Mathf.PI - difference1;
-                //measures counterclockwise
-
+                // difference1 measures clockwise
+                // difference2 measures counterclockwise
                 if (difference1 < difference2)
                 {
                     //go cw
@@ -129,7 +125,6 @@ public class Car : MonoBehaviour {
                     //go ccw
                     toChange = difference2;
                 }
-
             }
 
             // speed of rotation, might be weighted outside of function
@@ -164,9 +159,7 @@ public class Car : MonoBehaviour {
             Vector3 newTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
             lastTarget = newTarget;
             lastAngle = calculateAngle(transform.position, lastTarget);
-            print(lastAngle);
             normalPathForce = Mathf.Pow((lastAngle + currentAngle)/2, 2)/2;
-            print(normalPathForce);
         }
 
 
