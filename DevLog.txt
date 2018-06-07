@@ -1,8 +1,7 @@
 
 Self Driving Car Prototype:
 
-	Goals are:
-		
+	Goals are:	
 		Make a working self driving car that can:
 			avoid obstacles
 			be easily customizable
@@ -11,16 +10,24 @@ Self Driving Car Prototype:
 		Car has:
 			One front Raycasts that detects far away objects
 			2 whisker Raycasts that detect close objects (more for turning)
-			
-
-
-
-			
-			
-						
+							
 So far we have created 2 classes:
 	Car
 	Main
 
-	
+Need better interpolation formula
+
+
+Need to make a front obstacle deviation formula
+	Needs to be proportional to:
+		distance from car,
+		angle between journeyline and obstacle line
+		
+Need fields for:
+	Forces
+	currentAngularAcceleration
+	currentVelocity
+	currentAcceleration
+	currentVelocity
+
 	
