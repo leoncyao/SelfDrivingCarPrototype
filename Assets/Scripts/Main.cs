@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Main : MonoBehaviour {
 
     public GameObject carPrefab;
@@ -13,9 +12,10 @@ public class Main : MonoBehaviour {
 
     public static Main instance;
 
-    GameObject stat1;
-
-	void Start () {
+    ArrayList statinfo;
+    List<Stat> stats = new List<Stat>();
+    int t;
+    void Start () {
         instance = this;
 
 
@@ -25,34 +25,51 @@ public class Main : MonoBehaviour {
         centerY = screenSize / 2;
         center = new Vector2(centerX, centerY);
 
-        UI.instance.check();
+
 
         // Setting camera
-        Vector3 cameraPos = new Vector3(centerX, centerX, - screenSize / 2);
+        Vector3 cameraPos = new Vector3(centerX, centerX, - screenSize);
         mainCamera = Camera.main;
         mainCamera.transform.position = cameraPos;
         mainCamera.orthographic = true;
         mainCamera.orthographicSize = screenSize/2;
 
-
+        UI.instance.check(mainCamera);
         // good stuff
 
         mainCar = Instantiate(carPrefab, center, Quaternion.identity);
+        statinfo = new ArrayList();
+        statinfo.AddRange((new string[] { "mainCar.currentAngle", "mainCar.currentAngularVelocity", "mainCar.currentAngularAccerlation"}));
+        stats = new List<Stat>();
+        foreach (string name in statinfo)
+        {
+            stats.Add(UI.instance.makeStat(name));
+        }
 
 
-        stat1 = UI.instance.makeStat("mainCar.velocity", mainCamera);
+        t = 0;
 
     }
-	
-	void Update () {
+
+    void Update () {
 
         drawCenteredAxes();
 
 
         //make this update slower probably 1 once every tenth of second preferably
-        stat1.GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngle());
+        //((GameObject)stats[0]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngle());
+        //((GameObject)stats[1]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngularVelocity());
+        //((GameObject)stats[2]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngularAcceleration());
 
-	}
+        if (t % 10 == 0)
+        {
+            stats[0].updateData(mainCar.GetComponent<Car>().getCurrentAngle());
+            stats[1].updateData(mainCar.GetComponent<Car>().getCurrentAngularVelocity());
+            stats[2].updateData(mainCar.GetComponent<Car>().getCurrentAngularAcceleration());
+        }
+        t += 1;
+
+    }
 
     void drawCenteredAxes()
     {

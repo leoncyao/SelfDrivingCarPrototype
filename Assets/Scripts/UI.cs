@@ -5,6 +5,7 @@ using UnityEngine;
 public class UI : MonoBehaviour {
     public GameObject statPrefab;
     public static UI instance;
+    Camera mainCamera;
     int numStats;
     Vector2 startingStatLoc;
 
@@ -20,20 +21,21 @@ public class UI : MonoBehaviour {
 		
 	}
 
-    public GameObject makeStat(string name, Camera forScreen) 
+    public Stat makeStat(string name) 
     {
-        Vector2 offset = new Vector2(0, - 1 * numStats * 1/10 * screenSize);
-        Vector2 statloc = forScreen.WorldToScreenPoint(startingStatLoc + offset);
+        Vector2 offset = new Vector2(0, - 0.5f *  numStats * 1/10f * screenSize);
+        Vector2 statloc = mainCamera.WorldToScreenPoint(startingStatLoc + offset);
         GameObject stat = Instantiate(statPrefab, statloc, Quaternion.identity);
         stat.transform.SetParent(this.transform, true);
         Stat info = stat.GetComponent<Stat>();
-        info.name = name;
+        info.dataName = name;
         numStats += 1;
-        return stat;
+        return info;
     }
 
-    public void check()
+    public void check(Camera camera)
     {
+        mainCamera = camera;
         screenSize = Main.instance.getScreenSize();
         startingStatLoc = new Vector2(screenSize / 10, (9 * screenSize)/10f);
     }

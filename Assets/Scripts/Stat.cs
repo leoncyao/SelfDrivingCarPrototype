@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class Stat : MonoBehaviour
 {
 
-    string name;
+    public string dataName;
     float data = 0;
 
     void Start()
@@ -17,7 +17,7 @@ public class Stat : MonoBehaviour
     void Update()
     {
 
-        GetComponent<Text>().text = name + ": " + data.ToString();
+        GetComponent<Text>().text = dataName + ": " + data.ToString();
 
     }
 

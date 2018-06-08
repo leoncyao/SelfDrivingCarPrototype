@@ -22,7 +22,6 @@ public class Car : MonoBehaviour {
         float AngularForce = 0;
 
         // If the left mouse is clicked, set the last angle positioning
-        //AngularForce += checkNewTarget();
         checkNewTarget();
 
         // check current angle is not the same as last target angle 
@@ -31,18 +30,16 @@ public class Car : MonoBehaviour {
 
 
         //// scan for front obstacles
-        //float angularVelocityChange = checkFrontObstacle();
+        float angularVelocityChange = checkFrontObstacle();
 
 
 
         // once all checks are done, do calculations with weights that prioritize the most critical action (outputs)
-        currentAngularAcceleration += restoringForce;
+        float restoringForceWeight = 100;
+        AngularForce += restoringForce / restoringForceWeight;
+        currentAngularAcceleration = AngularForce;
         currentAngularVelocity += currentAngularAcceleration;
         currentAngle += currentAngularVelocity;
-
-        //currentAngularAcceleration /= 2;
-        //currentAngle += restoringForce;
-
 
 
         // actual changes
@@ -89,7 +86,8 @@ public class Car : MonoBehaviour {
         return deviation;
     }
 
-    public float avgRestoringForce()
+
+    public float angleTurn(float currentAngle, float lastAngle)
     {
         float toChange = 0;
         if (currentAngle != lastAngle)
@@ -130,63 +128,36 @@ public class Car : MonoBehaviour {
                     toChange = difference2;
                 }
             }
-
-            // speed of rotation, might be weighted outside of function
-            toChange /= 100;
-
-
-
-
         }
-
         return toChange;
+    }
+
+    public float avgRestoringForce()
+    {
+        float toChange = angleTurn(currentAngle, lastAngle);
+        return toChange / 2;
     }
 
     public float springRestoringForce()
     {
+        float force = 0;
+        float difference = angleTurn(currentAngle, lastAngle);
         // modeled by mx''(t) + cx'(t) + kx(t) = 0
-        float toChange = 0;
-        float difference = Mathf.Abs(currentAngle - lastAngle);
-        float c = 1, m = 1;
-        float k;
-        if (difference > 0.01)
+        float c = 2f, m = 1, k = 0.1f;
+        if (Mathf.Abs(difference) > 0.01)
         {
-            k = 1 / difference;
             float dampening = c * currentAngularVelocity;
-            float springForce = k * difference;
-            toChange = -(dampening + springForce) / m;
-            //print(toChange);
+            float springForce = k * -1*difference;
+            force = -(dampening + springForce) / m;
         }
 
-        float weight = 100;
-
-        toChange /= weight;
-        //float difference = Mathf.Abs(currentAngle - lastAngle);
-        //float toChange = 0;
-        //if (difference > 0.01) { 
-        //    float k = 1 / Mathf.Abs(currentAngle - lastAngle);
-        //    print(k);
-        //    float c = 2;
-
-        //    float expoPart = Mathf.Exp(k / 2);
-
-        //    float inside = Mathf.Sqrt(Mathf.Abs(Mathf.Pow(k, 2) - 4 * c)) / 2;
-
-
-        //    print(expoPart);
-        //    print(inside);
-
-        //    toChange = expoPart * (Mathf.Cos(inside) + Mathf.Sin(inside));
-        //}
-
-        //Use for debug, (REMOVE)
         if (Input.GetMouseButtonDown(1))
         {
-            print("differences is " + difference + " toChange is " + toChange);
+            print("difference is " + difference + " force is " + force);
             print("currentangle is " + Mathf.Rad2Deg * currentAngle + " lastangle is " + Mathf.Rad2Deg * lastAngle);
         }
 
-        return toChange;
+        return force;
     }
 
     public float checkNewTarget()
@@ -263,4 +234,7 @@ public class Car : MonoBehaviour {
 
     public float getCurrentAngle() { return this.currentAngle; }
 
+    public float getCurrentAngularVelocity() { return this.currentAngularVelocity; }
+
+    public float getCurrentAngularAcceleration() { return this.currentAngularAcceleration; }
 }
