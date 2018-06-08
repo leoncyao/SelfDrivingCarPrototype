@@ -7,23 +7,25 @@ public class Main : MonoBehaviour {
     public GameObject carPrefab;
     Camera mainCamera;
     GameObject mainCar;
-    float screenSize;
+    float screenSize = 10f;
     Vector2 center;
     float centerX, centerY;
 
     public static Main instance;
 
+    GameObject stat1;
 
 	void Start () {
-
         instance = this;
-        
+
+
         // Setting world fields
-        screenSize = 10f;
+        //screenSize = 10f;
         centerX = screenSize / 2;
         centerY = screenSize / 2;
         center = new Vector2(centerX, centerY);
 
+        UI.instance.check();
 
         // Setting camera
         Vector3 cameraPos = new Vector3(centerX, centerX, - screenSize / 2);
@@ -36,11 +38,19 @@ public class Main : MonoBehaviour {
         // good stuff
 
         mainCar = Instantiate(carPrefab, center, Quaternion.identity);
+
+
+        stat1 = UI.instance.makeStat("mainCar.velocity", mainCamera);
+
     }
 	
 	void Update () {
 
         drawCenteredAxes();
+
+
+        //make this update slower probably 1 once every tenth of second preferably
+        stat1.GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngle());
 
 	}
 
@@ -56,5 +66,10 @@ public class Main : MonoBehaviour {
     {
         return center;
     }
-    
+
+    public float getScreenSize()
+    {
+        return this.screenSize;
+    }
+
 }

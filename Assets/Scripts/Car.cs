@@ -10,12 +10,12 @@ public class Car : MonoBehaviour {
     float currentAngularVelocity = 0;
     float currentAngularAcceleration = 0;
     float lastAngle = 0;
-	void Start () {
+    void Start() {
         r = GetComponent<Rigidbody>();
         r.velocity = new Vector3(0, 0, 0);
-	}
-	
-	void Update () {
+    }
+
+    void Update() {
 
         // First do checks (inputs of the model)
 
@@ -26,7 +26,9 @@ public class Car : MonoBehaviour {
         checkNewTarget();
 
         // check current angle is not the same as last target angle 
-        float restoringForce = restoringForceAvg();
+        //float restoringForce = avgRestoringForce();
+        float restoringForce = springRestoringForce();
+
 
         //// scan for front obstacles
         //float angularVelocityChange = checkFrontObstacle();
@@ -34,28 +36,30 @@ public class Car : MonoBehaviour {
 
 
         // once all checks are done, do calculations with weights that prioritize the most critical action (outputs)
-        //currentAngularAcceleration += AngularForce;
-        //currentAngularVelocity += currentAngularAcceleration;
-        //currentAngle += currentAngularVelocity;
+        currentAngularAcceleration += restoringForce;
+        currentAngularVelocity += currentAngularAcceleration;
+        currentAngle += currentAngularVelocity;
 
         //currentAngularAcceleration /= 2;
-
-        // x(t) =
-        currentAngle += restoringForce;
+        //currentAngle += restoringForce;
 
 
 
         // actual changes
+        //print(currentAngle);
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Rad2Deg * currentAngle));
         Vector3 movement = new Vector3(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle), 0);
         // will add varying speeds later
-        r.velocity = movement * 1f;
+        float speed = 1f;
+        r.velocity = movement * speed;
 
 
         ////Set angle visualization.
         drawAngleArrow(currentAngle, Color.red); //CA
         drawAngleArrow(lastAngle, Color.green); //LA
         drawJourneyLine();
+
+
 
     }
 
@@ -85,7 +89,7 @@ public class Car : MonoBehaviour {
         return deviation;
     }
 
-    public float restoringForceAvg()
+    public float avgRestoringForce()
     {
         float toChange = 0;
         if (currentAngle != lastAngle)
@@ -131,23 +135,58 @@ public class Car : MonoBehaviour {
             toChange /= 100;
 
 
-            //Use for debug, (REMOVE)
-            if (Input.GetMouseButtonDown(1))
-            {
-                print("difference1 is " + Mathf.Rad2Deg * difference1 + " difference2 " + Mathf.Rad2Deg * difference2);
-                print("currentangle is " + Mathf.Rad2Deg * currentAngle + " lastangle is " + Mathf.Rad2Deg * lastAngle);
-            }
+
 
         }
 
         return toChange;
     }
 
-    public float restoringForceDO()
+    public float springRestoringForce()
     {
+        // modeled by mx''(t) + cx'(t) + kx(t) = 0
+        float toChange = 0;
+        float difference = Mathf.Abs(currentAngle - lastAngle);
+        float c = 1, m = 1;
+        float k;
+        if (difference > 0.01)
+        {
+            k = 1 / difference;
+            float dampening = c * currentAngularVelocity;
+            float springForce = k * difference;
+            toChange = -(dampening + springForce) / m;
+            //print(toChange);
+        }
+
+        float weight = 100;
+
+        toChange /= weight;
+        //float difference = Mathf.Abs(currentAngle - lastAngle);
+        //float toChange = 0;
+        //if (difference > 0.01) { 
+        //    float k = 1 / Mathf.Abs(currentAngle - lastAngle);
+        //    print(k);
+        //    float c = 2;
+
+        //    float expoPart = Mathf.Exp(k / 2);
+
+        //    float inside = Mathf.Sqrt(Mathf.Abs(Mathf.Pow(k, 2) - 4 * c)) / 2;
 
 
-        return 0;
+        //    print(expoPart);
+        //    print(inside);
+
+        //    toChange = expoPart * (Mathf.Cos(inside) + Mathf.Sin(inside));
+        //}
+
+        //Use for debug, (REMOVE)
+        if (Input.GetMouseButtonDown(1))
+        {
+            print("differences is " + difference + " toChange is " + toChange);
+            print("currentangle is " + Mathf.Rad2Deg * currentAngle + " lastangle is " + Mathf.Rad2Deg * lastAngle);
+        }
+
+        return toChange;
     }
 
     public float checkNewTarget()
@@ -159,37 +198,49 @@ public class Car : MonoBehaviour {
             Vector3 newTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
             lastTarget = newTarget;
             lastAngle = calculateAngle(transform.position, lastTarget);
-            normalPathForce = Mathf.Pow((lastAngle + currentAngle)/2, 2)/2;
+            //normalPathForce = Mathf.Pow((lastAngle + currentAngle) / 2, 2) / 2;
         }
-
-
         return normalPathForce;
     }
 
     public float calculateAngle(Vector2 from, Vector2 to)
     {
+        // treat from as the origin, to as the lever arm
         float angle;
-        if (from.magnitude < 0.01)
+        //if (from.magnitude < 0.01)
+        //{
+        //    angle = Mathf.Atan(to.y / to.x);
+        //}
+        //else
+        //{
+        Vector3 relativePos = to - from;
+        angle = Mathf.Atan(Mathf.Abs(relativePos.y / relativePos.x));
+
+        // edge cases for where Atan is undefined
+        if (Mathf.Abs(relativePos.x) < 0.01)
         {
-            angle = Mathf.Atan(to.y / to.x);
-        }
-        else
+            if (relativePos.y > 0)
+            {
+                angle = Mathf.PI;
+            }
+            else
+            {
+                angle = -Mathf.PI;
+            }
+        } // usual cases (quadrants as tan is the same in third and first)
+        else if (relativePos.x < 0 && relativePos.y > 0)
         {
-            Vector3 relativePos = to - from;
-            angle = Mathf.Atan(Mathf.Abs(relativePos.y / relativePos.x));
-            if (relativePos.x < 0 && relativePos.y > 0)
-            {
-                angle = Mathf.PI - angle;
-            }
-            else if (relativePos.x < 0 && relativePos.y < 0)
-            {
-                angle += Mathf.PI;
-            }
-            else if (relativePos.x > 0 && relativePos.y < 0)
-            {
-                angle = 2 * Mathf.PI - angle;
-            }
+            angle = Mathf.PI - angle;
         }
+        else if (relativePos.x < 0 && relativePos.y < 0)
+        {
+            angle += Mathf.PI;
+        }
+        else if (relativePos.x > 0 && relativePos.y < 0)
+        {
+            angle = 2 * Mathf.PI - angle;
+        }
+        //}
         return angle;
     }
 
@@ -209,5 +260,7 @@ public class Car : MonoBehaviour {
             Debug.DrawLine(transform.position, lastTarget, Color.blue);
         }
     }
+
+    public float getCurrentAngle() { return this.currentAngle; }
 
 }

@@ -1,6 +1,4 @@
-
 Self Driving Car Prototype:
-
 	Goals are:	
 		Make a working self driving car that can:
 			avoid obstacles
@@ -15,8 +13,8 @@ So far we have created 2 classes:
 	Car
 	Main
 
-Need better interpolation formula
-
+Need better restoring interpolation formula, as our current one does not reach destination (depends on constant)
+could be fixed by updating lastAngle every few seconds to lastTarget
 
 Need to make a front obstacle deviation formula
 	Needs to be proportional to:
@@ -29,5 +27,29 @@ Need fields for:
 	currentVelocity
 	currentAcceleration
 	currentVelocity
+	
+Cool level ideas for later:
+	Having ice on the level that makes cars skid
+	Having cars interact with each other
+	Having a city type level with grid like streets:
+		players would be given a graph of the city with notes representing intersections
+		and edges representing streets. The edges would be weighted with times representing the amount
+		of time to cross (or avg speed of cars there). The player would be given the option to use
+		a shortest path algorithm to go through the fastest streets in the city to reach the destination. 
+		This could be more easily visualized with cars moving in each street that block players, and have speeds
+		proportional to the edge weights
+	Parking level (probably not since nobody likes parking)
+	Battle level
+	
+	also an outside program where, players can just select cars and have them go to places
+	maybe make a small rts game out of that. 
+		
+		
+		
+		
+		
+		
+		
+		
 
 	
