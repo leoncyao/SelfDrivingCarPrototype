@@ -10,11 +10,12 @@ public class Main : MonoBehaviour {
     Vector2 center;
     float centerX, centerY;
 
+
+
+    int t = 0;
     public static Main instance;
 
-    ArrayList statinfo;
-    List<Stat> stats = new List<Stat>();
-    int t;
+
     void Start () {
         instance = this;
 
@@ -28,46 +29,28 @@ public class Main : MonoBehaviour {
 
 
         // Setting camera
-        Vector3 cameraPos = new Vector3(centerX, centerX, - screenSize);
+        Vector3 cameraPos = new Vector3(centerX, centerX, - screenSize/2);
         mainCamera = Camera.main;
         mainCamera.transform.position = cameraPos;
         mainCamera.orthographic = true;
         mainCamera.orthographicSize = screenSize/2;
+        mainCamera.backgroundColor = Color.black;
 
         UI.instance.check(mainCamera);
         // good stuff
 
-        mainCar = Instantiate(carPrefab, center, Quaternion.identity);
-        statinfo = new ArrayList();
-        statinfo.AddRange((new string[] { "mainCar.currentAngle", "mainCar.currentAngularVelocity", "mainCar.currentAngularAccerlation"}));
-        stats = new List<Stat>();
-        foreach (string name in statinfo)
-        {
-            stats.Add(UI.instance.makeStat(name));
-        }
+        Vector2 startingLoc = new Vector2(centerX / 2, centerY);
+        //Vector2 startingLoc = center;
+        mainCar = Instantiate(carPrefab, startingLoc, Quaternion.identity);
 
-
-        t = 0;
 
     }
+
+
 
     void Update () {
 
         drawCenteredAxes();
-
-
-        //make this update slower probably 1 once every tenth of second preferably
-        //((GameObject)stats[0]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngle());
-        //((GameObject)stats[1]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngularVelocity());
-        //((GameObject)stats[2]).GetComponent<Stat>().updateData(mainCar.GetComponent<Car>().getCurrentAngularAcceleration());
-
-        if (t % 10 == 0)
-        {
-            stats[0].updateData(mainCar.GetComponent<Car>().getCurrentAngle());
-            stats[1].updateData(mainCar.GetComponent<Car>().getCurrentAngularVelocity());
-            stats[2].updateData(mainCar.GetComponent<Car>().getCurrentAngularAcceleration());
-        }
-        t += 1;
 
     }
 

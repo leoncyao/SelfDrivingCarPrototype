@@ -19,16 +19,29 @@ could be fixed by updating lastAngle every few seconds to lastTarget
 Need to make a front obstacle deviation formula
 	Needs to be proportional to:
 		distance from car,
-		angle between journeyline and obstacle line
+		angle between obstacleAngle and lastAngle 
+		angle between currentAngle and lastAngle
 		
+Need Stopping routine
+	
 Need fields for:
 	Forces
 	currentAngularAcceleration
-	currentVelocity
-	currentAcceleration
-	currentVelocity
+	currentAngularVelocity
+	currentAngle
 	
-Cool level ideas for later:
+	
+2018-06-09
+	Going to work on front obstacle detection formula
+	
+	
+	
+	
+	
+	
+	
+	
+Cool ideas for later:
 	Having ice on the level that makes cars skid
 	Having cars interact with each other
 	Having a city type level with grid like streets:
@@ -41,8 +54,13 @@ Cool level ideas for later:
 	Parking level (probably not since nobody likes parking)
 	Battle level
 	
-	also an outside program where, players can just select cars and have them go to places
-	maybe make a small rts game out of that. 
+	Having a Raycast detect moving objects and shifts movement to accommodate. Could be achieve by finding min of distance 
+	of paths parameterized by time between Car and object.
+	(Meaning see how close they would get given current tragetories) 
+	and adjusting while the min dist > collision distance 
+	
+	Also an outside program where, players can just select cars and have them go to places
+	maybe make a small RTS game out of that. 
 		
 		
 		
