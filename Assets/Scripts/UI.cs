@@ -15,18 +15,6 @@ public class UI : MonoBehaviour {
         //float screenSize = Main.instance.getScreenSize();
     }
 
-    //public Stat makeStat(string name) 
-    //{
-    //    Vector2 offset = new Vector2(0, - 0.5f *  numStats * 1/10f * screenSize);
-    //    Vector2 statloc = mainCamera.WorldToScreenPoint(startingStatLoc + offset);
-    //    GameObject stat = Instantiate(statPrefab, statloc, Quaternion.identity);
-    //    stat.transform.SetParent(this.transform, true);
-    //    Stat info = stat.GetComponent<Stat>();
-    //    info.dataName = name;
-    //    numStats += 1;
-    //    return info;
-    //}
-
     public void check(Camera camera)
     {
         mainCamera = camera;

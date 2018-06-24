@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
 public class Main : MonoBehaviour {
 
     public GameObject carPrefab;
     Camera mainCamera;
     GameObject mainCar;
-    float screenSize = 10f;
+    float screenSize = 15f;
     Vector2 center;
     float centerX, centerY;
 
-
+    public float[] axis;
 
     int t = 0;
     public static Main instance;
@@ -39,10 +41,11 @@ public class Main : MonoBehaviour {
         UI.instance.check(mainCamera);
         // good stuff
 
-        Vector2 startingLoc = new Vector2(centerX / 2, centerY);
+        Vector2 startingLoc = new Vector2(centerX / 2, centerY - 1);
         //Vector2 startingLoc = center;
         mainCar = Instantiate(carPrefab, startingLoc, Quaternion.identity);
 
+        axis = new float[] { 0, centerY, screenSize / 4 };
 
     }
 
@@ -50,21 +53,26 @@ public class Main : MonoBehaviour {
 
     void Update () {
 
-        drawCenteredAxes();
+        drawAxes(axis[0], axis[1], axis[2]);
 
     }
-
-    void drawCenteredAxes()
+    void drawAxes(float originX, float originY, float axisLength)
     {
 
-        Debug.DrawLine(new Vector3(centerX, 0, 0), new Vector3(centerX, screenSize, 0));
-        Debug.DrawLine(new Vector3(0, centerY, 0), new Vector3(screenSize, centerY, 0));
+        Debug.DrawLine(new Vector3(originX, originY-axisLength/2, 0), new Vector3(originX, originY + axisLength / 2, 0));
+
+        Debug.DrawLine(new Vector3(originX - axisLength/2, originY, 0), new Vector3(originX + axisLength / 2, originY, 0));
 
     }
 
     public Vector2 getCenter()
     {
         return center;
+    }
+
+    public float[] getAxis()
+    {
+        return axis;
     }
 
     public float getScreenSize()

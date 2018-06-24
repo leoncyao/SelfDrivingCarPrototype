@@ -34,6 +34,8 @@ ExportedObj/
 *.DWLT
 *.File
 *.fla
+*.xml
+*.config
 
 # Unity3D generated meta files
 *.pidb.meta

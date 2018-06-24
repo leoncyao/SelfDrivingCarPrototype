@@ -34,13 +34,32 @@ Need fields for:
 2018-06-09
 	Going to work on front obstacle detection formula
 	
+2018-06-19
+	We have written most of the basic implementation. We have a car that moves toward a given target by moving at 
+	a constant speed and rotating by a restoring force. The car currently has 2 raycasts that fire at 45 degree angles from the front.
+	They detect obstacles and produce forces to avoid such obstacles. However the weights and forces that the raycasts produce are not tuned well
 	
+	The next phase of the prototype will be to build a machine learning algorithm that optimizes weights
 	
+    1. The first step will be to randomly assign weights to the raycasts and restoring force
+	2. Then we will run the car through a series of tests, computing two costs functions	
+		Distance from target
+			Measured by the closest distance from the car was from the target
+		Number of collisions
+			Measured by number of time the car collided with an object	
+	(other cost functions will be implemented later like time taken and distance travelled)
+	3. Then the given test run will be graded by the cost functions.
 	
+	4. Repeated steps 1 - 3 many times
+	5. Take an average of the trials with the lowest graded cost,
+	and repeat the algorithm again, except the weights will be centered around the values of the
+	best trials (with 1 standard deviation lets say)
+	Instead of taking an avg we might just make several new batches of trials from the previous batch of trials,
+	each centered around the nth lowest scorer.
 	
-	
-	
-	
+
+
+
 Cool ideas for later:
 	Having ice on the level that makes cars skid
 	Having cars interact with each other
